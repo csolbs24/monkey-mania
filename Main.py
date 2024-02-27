@@ -1,6 +1,7 @@
 # Example file showing a circle moving on screen
 import pygame
 import random
+import math
 
 # pygame setup
 pygame.init()
@@ -26,8 +27,6 @@ def draw_start_menu():
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 enemy_pos = pygame.Vector2(screen.get_width() / 3, screen.get_height() / 3)
 
-if keys[pygame.K_p]:
-    draw_start_menu()
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -42,11 +41,16 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     if game_state == "game_run":
         screen.fill("green")
+        background = pygame.image.load("start_menu.png").convert()
+        screen.blit(background, (0,0))
+        scroll = 0
+        index_background = 0
+        tiles = math.ceil(screen_width / background.get_width()) + 1
         pygame.draw.circle(screen, "red", enemy_pos, 50)
         pygame.draw.circle(screen, "brown", player_pos, 40)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
-            player_pos.y -= 300 * dt
+            player_pos.y -= 300 * dt 
         if keys[pygame.K_s]:
             player_pos.y += 300 * dt
         if keys[pygame.K_a]:
@@ -68,7 +72,7 @@ while running:
         if keys[pygame.K_ESCAPE]:
             game_state = "start_menu"
         # flip() the display to put your work on screen
-    pygame.display.update()
+        pygame.display.update()
     # limits FPS to 60
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
