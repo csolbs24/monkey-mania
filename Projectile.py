@@ -5,7 +5,10 @@ class Projectile:
         self.y = y
         self.radius = radius
         self.color = color
-        self.vel = 8 
+        self.vel = 8
 
-    def draw(self, window):
+    def draw(self,window):
         pygame.draw.circle(window, self.color, (self.x, self.y), self.radius)
+    
+    def setvel(newvel):
+        vel = newvel

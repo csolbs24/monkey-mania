@@ -60,8 +60,8 @@ while running:
         if keys[pygame.K_d]:
             player_pos.x += 300 * dt
         if keys[pygame.K_l]:
-            bullet = Projectile(player_pos.x,player_pos.y, 6,(255,0,0))
-            bullet.draw(player_pos, screen)
+            bullet = Projectile()
+            bullet._init_(player_pos.x,player_pos.y, 6, (255,0,0))
             bullets.append(bullet)
         if enemy_pos.y < player_pos.y:
             enemy_pos.y += 200 * dt
@@ -72,11 +72,12 @@ while running:
         else:
             enemy_pos.x -= 200 * dt
         for i in bullets:
-            bullets[i].x += bullet.vel
-        if enemy_pos.y != screen.get_height:
-            enemy_pos.y += random.randint(-300,300)* dt
-        if enemy_pos.x != screen.get_height:
-            enemy_pos.x += random.randint(-300,300) * dt
+            i.x += i.vel
+            i.draw(screen)
+        #if enemy_pos.y != screen.get_height:
+            #enemy_pos.y += random.randint(-300,300)* dt
+        #if enemy_pos.x != screen.get_height:
+            #enemy_pos.x += random.randint(-300,300) * dt
         if keys[pygame.K_ESCAPE]:
             game_state = "start_menu"
         # flip() the display to put your work on screen
