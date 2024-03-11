@@ -2,6 +2,7 @@
 import pygame
 import random
 import math
+from Projectile import Projectile
 
 # pygame setup
 pygame.init()
@@ -10,6 +11,7 @@ screen_height = 720
 screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
 running = True
+bullets = []
 dt = 0
 game_state = "start_menu"
 keys = pygame.key.get_pressed()
@@ -57,6 +59,10 @@ while running:
             player_pos.x -= 300 * dt
         if keys[pygame.K_d]:
             player_pos.x += 300 * dt
+        if keys[pygame.K_l]:
+            bullet = Projectile(player_pos.x,player_pos.y, 6,(255,0,0))
+            bullet.draw(player_pos, screen)
+            bullets.append(bullet)
         if enemy_pos.y < player_pos.y:
             enemy_pos.y += 200 * dt
         else:
@@ -65,6 +71,8 @@ while running:
             enemy_pos.x += 200 * dt
         else:
             enemy_pos.x -= 200 * dt
+        for i in bullets:
+            bullets[i].x += bullet.vel
         if enemy_pos.y != screen.get_height:
             enemy_pos.y += random.randint(-300,300)* dt
         if enemy_pos.x != screen.get_height:
@@ -79,3 +87,4 @@ while running:
     dt = clock.tick(60) / 1000
 
 pygame.quit()
+
