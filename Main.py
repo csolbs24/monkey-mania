@@ -48,7 +48,7 @@ while running:
         scroll = 0
         index_background = 0
         tiles = math.ceil(screen_width / background.get_width()) + 1
-        pygame.draw.circle(screen, "red", enemy_pos, 50)
+        pygame.draw.circle(screen, "red", enemy_pos, 40)
         pygame.draw.circle(screen, "brown", player_pos, 40)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
@@ -59,20 +59,43 @@ while running:
             player_pos.x -= 300 * dt
         if keys[pygame.K_d]:
             player_pos.x += 300 * dt
-        if keys[pygame.K_l]:
+        if keys[pygame.K_LEFT]:
             bullet = Projectile()
-            bullet._init_(player_pos.x,player_pos.y, 6, (255,0,0))
+            bullet._init_(player_pos.x,player_pos.y, 6, (255,0,0), "Left")
+            bullets.append(bullet)
+        elif keys[pygame.K_DOWN]:
+            bullet = Projectile()
+            bullet._init_(player_pos.x,player_pos.y, 6, (255,0,0), "Down")
+            bullets.append(bullet)
+        elif keys[pygame.K_UP]:
+            bullet = Projectile()
+            bullet._init_(player_pos.x,player_pos.y, 6, (255,0,0), "Up")
+            bullets.append(bullet)
+        elif keys[pygame.K_RIGHT]:
+            bullet = Projectile()
+            bullet._init_(player_pos.x,player_pos.y, 6, (255,0,0), "Right")
             bullets.append(bullet)
         if enemy_pos.y < player_pos.y:
             enemy_pos.y += 200 * dt
+        elif enemy_pos.y == player_pos.y:
+            enemy_pos.y += 0
         else:
             enemy_pos.y -= 200 * dt
         if enemy_pos.x < player_pos.x:
             enemy_pos.x += 200 * dt
+        elif enemy_pos.x == player_pos.x:
+            enemy_pos.x += 0
         else:
             enemy_pos.x -= 200 * dt
         for i in bullets:
-            i.x += i.vel
+            if i.direction == "Left":
+                i.x -= i.vel
+            elif i.direction == "Right":
+                i.x += i.vel
+            elif i.direction == "Up":
+                i.y -= i.vel
+            elif i.direction == "Down":
+                i.y += i.vel
             i.draw(screen)
         #if enemy_pos.y != screen.get_height:
             #enemy_pos.y += random.randint(-300,300)* dt
