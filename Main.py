@@ -52,13 +52,17 @@ while running:
         pygame.draw.circle(screen, "brown", player_pos, 40)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
-            player_pos.y -= 300 * dt 
+            if player_pos.y > 0:
+                player_pos.y -= 300 * dt 
         if keys[pygame.K_s]:
-            player_pos.y += 300 * dt
+            if player_pos.y < screen_height:
+                player_pos.y += 300 * dt
         if keys[pygame.K_a]:
-            player_pos.x -= 300 * dt
+            if player_pos.x > 0:
+                player_pos.x -= 300 * dt
         if keys[pygame.K_d]:
-            player_pos.x += 300 * dt
+            if player_pos.x < screen_width:
+                player_pos.x += 300 * dt
         if keys[pygame.K_LEFT]:
             bullet = Projectile()
             bullet._init_(player_pos.x,player_pos.y, 6, (255,0,0), "Left")
@@ -96,11 +100,30 @@ while running:
                 i.y -= i.vel
             elif i.direction == "Down":
                 i.y += i.vel
-            i.draw(screen)
+
+            # If the bullet hits the border based on the game screen, the bullet will
+            # be removed from the list. Otherwise, the bullet will be drawn on the screen
+            if i.y < 0 or i.y > screen_height or i.x < 0 or i.x > screen_width:
+                bullets.remove(i)
+            else:
+                i.draw(screen)
+            
+            # Note: Not exact code, this is framework for if a
+            # bullet hits the enemy
+            #if i.x == enemy_pos.x and i.y == enemy_pos.y:
+            #    enemy.kill
+            #    bullets.remove(i)
+                
         #if enemy_pos.y != screen.get_height:
             #enemy_pos.y += random.randint(-300,300)* dt
         #if enemy_pos.x != screen.get_height:
             #enemy_pos.x += random.randint(-300,300) * dt
+                
+        # Note: Not exact code, framework for 
+        # if the enemy reaches the player
+        #if player_pos == enemy_pos:
+            #player.kill
+                
         if keys[pygame.K_ESCAPE]:
             game_state = "start_menu"
         # flip() the display to put your work on screen
