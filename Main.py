@@ -40,6 +40,7 @@ while running:
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE]:
             game_state = "game_run"
+
     # fill the screen with a color to wipe away anything from last frame
     if game_state == "game_run":
         screen.fill("green")
@@ -52,13 +53,17 @@ while running:
         pygame.draw.circle(screen, "brown", player_pos, 40)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
-            player_pos.y -= 300 * dt 
+            if player_pos.y > 0:
+                player_pos.y -= 300 * dt 
         if keys[pygame.K_s]:
-            player_pos.y += 300 * dt
+            if player_pos.y < screen_height:
+                player_pos.y += 300 * dt
         if keys[pygame.K_a]:
-            player_pos.x -= 300 * dt
+            if player_pos.x > 0:
+                player_pos.x -= 300 * dt
         if keys[pygame.K_d]:
-            player_pos.x += 300 * dt
+            if player_pos.x < screen_width:
+                player_pos.x += 300 * dt
         if keys[pygame.K_LEFT]:
             bullet = Projectile()
             bullet._init_(player_pos.x,player_pos.y, 6, (255,0,0), "Left")
@@ -78,13 +83,13 @@ while running:
         if enemy_pos.y < player_pos.y:
             enemy_pos.y += 200 * dt
         elif enemy_pos.y == player_pos.y:
-            enemy_pos.y += 0
+            enemy_pos.y += 0 * dt
         else:
             enemy_pos.y -= 200 * dt
         if enemy_pos.x < player_pos.x:
             enemy_pos.x += 200 * dt
         elif enemy_pos.x == player_pos.x:
-            enemy_pos.x += 0
+            enemy_pos.x += 0 * dt
         else:
             enemy_pos.x -= 200 * dt
         for i in bullets:
@@ -96,7 +101,18 @@ while running:
                 i.y -= i.vel
             elif i.direction == "Down":
                 i.y += i.vel
+
+
+
+            if i.y < 0 or i.y > screen_height or i.x < 0 or i.x > screen_width:
+                bullets.remove(i)
+            else: 
+                i.draw(screen)
+
             i.draw(screen)
+
+
+
         #if enemy_pos.y != screen.get_height:
             #enemy_pos.y += random.randint(-300,300)* dt
         #if enemy_pos.x != screen.get_height:
