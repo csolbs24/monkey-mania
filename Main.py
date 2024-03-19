@@ -3,6 +3,7 @@ import pygame
 import random
 import math
 from Projectile import Projectile
+from Block import Block 
 
 # pygame setup
 pygame.init()
@@ -26,8 +27,8 @@ def draw_start_menu():
    screen.blit(start_button, (screen_width/2 - start_button.get_width()/2, screen_height/2 + start_button.get_height()/2))
    pygame.display.update()
 
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-enemy_pos = pygame.Vector2(screen.get_width() / 3, screen.get_height() / 3)
+player_pos = pygame.math.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+enemy_pos = pygame.math.Vector2(screen.get_width() / 3, screen.get_height() / 3)
 
 while running:
     # poll for events
@@ -46,24 +47,26 @@ while running:
         screen.fill("green")
         background = pygame.image.load("start_menu.png").convert()
         screen.blit(background, (0,0))
-        scroll = 0
-        index_background = 0
-        tiles = math.ceil(screen_width / background.get_width()) + 1
+
+        
         pygame.draw.circle(screen, "red", enemy_pos, 40)
-        pygame.draw.circle(screen, "brown", player_pos, 40)
+        pygame.draw.circle(screen, (0,0,0), player_pos, 30)
+        monkeyimage = pygame.image.load("gmonke.png").convert()
+        screen.blit(monkeyimage, (player_pos.x - 25, player_pos.y -25))
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
             if player_pos.y > 0:
-                player_pos.y -= 300 * dt 
+                player_pos.y -= 400 * dt 
         if keys[pygame.K_s]:
             if player_pos.y < screen_height:
-                player_pos.y += 300 * dt
+                player_pos.y += 400 * dt
         if keys[pygame.K_a]:
             if player_pos.x > 0:
-                player_pos.x -= 300 * dt
+                player_pos.x -= 400 * dt
         if keys[pygame.K_d]:
             if player_pos.x < screen_width:
-                player_pos.x += 300 * dt
+                player_pos.x += 400 * dt
+
         if keys[pygame.K_LEFT]:
             bullet = Projectile()
             bullet._init_(player_pos.x,player_pos.y, 6, (255,0,0), "Left")
@@ -80,18 +83,21 @@ while running:
             bullet = Projectile()
             bullet._init_(player_pos.x,player_pos.y, 6, (255,0,0), "Right")
             bullets.append(bullet)
-        if enemy_pos.y < player_pos.y:
-            enemy_pos.y += 200 * dt
-        elif enemy_pos.y == player_pos.y:
+
+        if enemy_pos.y == player_pos.y:
             enemy_pos.y += 0 * dt
-        else:
+        elif enemy_pos.y < player_pos.y:
+            enemy_pos.y += 200 * dt
+        elif enemy_pos.y > player_pos.y:
             enemy_pos.y -= 200 * dt
-        if enemy_pos.x < player_pos.x:
-            enemy_pos.x += 200 * dt
-        elif enemy_pos.x == player_pos.x:
+
+        if enemy_pos.x == player_pos.x:
             enemy_pos.x += 0 * dt
-        else:
+        elif enemy_pos.x < player_pos.x:
+            enemy_pos.x += 200 * dt
+        elif enemy_pos.x > player_pos.x:
             enemy_pos.x -= 200 * dt
+
         for i in bullets:
             if i.direction == "Left":
                 i.x -= i.vel
@@ -103,20 +109,17 @@ while running:
                 i.y += i.vel
 
 
+            if (abs(enemy_pos.y - i.y) < 46 and abs(enemy_pos.x - i.x) < 46):
+                bullets.remove(i)
 
-            if i.y < 0 or i.y > screen_height or i.x < 0 or i.x > screen_width:
+
+            elif i.y < 0 or i.y > screen_height or i.x < 0 or i.x > screen_width:
                 bullets.remove(i)
             else: 
                 i.draw(screen)
 
             i.draw(screen)
 
-
-
-        #if enemy_pos.y != screen.get_height:
-            #enemy_pos.y += random.randint(-300,300)* dt
-        #if enemy_pos.x != screen.get_height:
-            #enemy_pos.x += random.randint(-300,300) * dt
         if keys[pygame.K_ESCAPE]:
             game_state = "start_menu"
         # flip() the display to put your work on screen
